@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.core.dao.HomeworkDao">
+  <resultMap id="BaseResultMap" type="com.itheima.core.po.Homework">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="courseid" jdbcType="INTEGER" property="courseid" />
+    <result column="worktitle" jdbcType="CHAR" property="worktitle" />
+    <result column="classnum" jdbcType="INTEGER" property="classnum" />
+    <result column="filename" jdbcType="CHAR" property="filename" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, courseid, worktitle, classnum, filename
+  </sql>
+  <select id="findByCourse" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from work
+    where courseid=#{id,jdbcType=INTEGER}
+  </select>
+  <select id="findAll" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from work;
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from work
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from work
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.itheima.core.po.Homework">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into work (courseid, worktitle, classnum, 
+      filename)
+    values (#{courseid,jdbcType=INTEGER}, #{worktitle,jdbcType=CHAR}, #{classnum,jdbcType=INTEGER}, 
+      #{filename,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.itheima.core.po.Homework">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into work
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="courseid != null">
+        courseid,
+      </if>
+      <if test="worktitle != null">
+        worktitle,
+      </if>
+      <if test="classnum != null">
+        classnum,
+      </if>
+      <if test="filename != null">
+        filename,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="courseid != null">
+        #{courseid,jdbcType=INTEGER},
+      </if>
+      <if test="worktitle != null">
+        #{worktitle,jdbcType=CHAR},
+      </if>
+      <if test="classnum != null">
+        #{classnum,jdbcType=INTEGER},
+      </if>
+      <if test="filename != null">
+        #{filename,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.itheima.core.po.Homework">
+    update work
+    <set>
+      <if test="courseid != null">
+        courseid = #{courseid,jdbcType=INTEGER},
+      </if>
+      <if test="worktitle != null">
+        worktitle = #{worktitle,jdbcType=CHAR},
+      </if>
+      <if test="classnum != null">
+        classnum = #{classnum,jdbcType=INTEGER},
+      </if>
+      <if test="filename != null">
+        filename = #{filename,jdbcType=CHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.itheima.core.po.Homework">
+    update work
+    set courseid = #{courseid,jdbcType=INTEGER},
+      worktitle = #{worktitle,jdbcType=CHAR},
+      classnum = #{classnum,jdbcType=INTEGER},
+      filename = #{filename,jdbcType=CHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

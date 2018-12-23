@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.core.dao.StuworkDao">
+  <resultMap id="BaseResultMap" type="com.itheima.core.po.StuWork">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="student" jdbcType="INTEGER" property="student" />
+    <result column="course" jdbcType="INTEGER" property="course" />
+    <result column="workname" jdbcType="CHAR" property="workname" />
+    <result column="workid"  jdbcType="INTEGER" property="workid"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, student, course, workname,workid
+  </sql>
+  <select id="findMyStuWorks" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  select stu.id, stu.student, stu.course, stu.workname,stu.workid
+  	from course as c,stu_work as stu,student as s,user
+  	where s.id=stu.student and stu.course=c.id and user.id=#{id,jdbcType=INTEGER} and user.name=s.name
+  </select>
+  <select id="selectByStuWorks" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  select 
+    <include refid="Base_Column_List" />
+    from stu_work
+    where course = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from stu_work
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from stu_work
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.itheima.core.po.StuWork">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into stu_work (student, course, workname,workid
+      )
+    values (#{student,jdbcType=INTEGER}, #{course,jdbcType=INTEGER}, #{workname,jdbcType=CHAR},#{workid,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.itheima.core.po.StuWork">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into stu_work
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="student != null">
+        student,
+      </if>
+      <if test="course != null">
+        course,
+      </if>
+      <if test="workname != null">
+        workname,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="student != null">
+        #{student,jdbcType=INTEGER},
+      </if>
+      <if test="course != null">
+        #{course,jdbcType=INTEGER},
+      </if>
+      <if test="workname != null">
+        #{workname,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.itheima.core.po.StuWork">
+    update stu_work
+    <set>
+      <if test="student != null">
+        student = #{student,jdbcType=INTEGER},
+      </if>
+      <if test="course != null">
+        course = #{course,jdbcType=INTEGER},
+      </if>
+      <if test="workname != null">
+        workname = #{workname,jdbcType=CHAR},
+      </if>
+      <if test="workid != null">
+        workid = #{workid,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.itheima.core.po.StuWork">
+    update stu_work
+    set student = #{student,jdbcType=INTEGER},
+      course = #{course,jdbcType=INTEGER},
+      workname = #{workname,jdbcType=CHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.core.dao.StudentDao">
+  <resultMap id="BaseResultMap" type="com.itheima.core.po.Student">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="CHAR" property="name" />
+    <result column="telephone" jdbcType="CHAR" property="telephone" />
+    <result column="classId" jdbcType="INTEGER" property="classId"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, telephone,classId
+  </sql>
+  <select id="findByClassId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from student
+    where classId = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="findStudentByName" parameterType="map" resultMap="BaseResultMap">
+  	select s.id, s.name, s.telephone,s.classId
+  	from student as s,user as u
+  	where s.name=u.name and u.id=#{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByStuWorks" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from student
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from student
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from student
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.itheima.core.po.Student">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into student (id,name, telephone,classId)
+    values (#{id,jdbcType=INTEGER},#{name,jdbcType=CHAR}, #{telephone,jdbcType=CHAR},#{classId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.itheima.core.po.Student">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into student
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        name,
+      </if>
+      <if test="telephone != null">
+        telephone,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        #{name,jdbcType=CHAR},
+      </if>
+      <if test="telephone != null">
+        #{telephone,jdbcType=CHAR},
+      </if>
+    </trim>
+    
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.itheima.core.po.Student">
+    update student
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=CHAR},
+      </if>
+      <if test="telephone != null">
+        telephone = #{telephone,jdbcType=CHAR},
+      </if>
+      <if test="classId != null">
+        classId = #{classId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.itheima.core.po.Student">
+    update student
+    set name = #{name,jdbcType=CHAR},
+      telephone = #{telephone,jdbcType=CHAR},
+      classId=#{classId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
